@@ -8,7 +8,9 @@ import pro.sky.algorithmsLesson.exceptions.InvalidIndexException;
 import pro.sky.algorithmsLesson.exceptions.NullItemException;
 import pro.sky.algorithmsLesson.exceptions.StorageIsFullException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +35,8 @@ class StringListImplTest {
     @Test
     void shouldAdd_WhenCorrectParam_ThenAdd() {
         int size = stringList.size();
-        Assertions.assertEquals("name6", stringList.add("name6"));
-        Assertions.assertEquals(size + 1, stringList.size());  //Убеждаемся в прибавке нового элемента
+        Assertions.assertEquals("name6", stringList.add("name6")); //Добаляем в массив шестой элемент "name6"
+        Assertions.assertEquals(size + 1, stringList.size());  //Убеждаемся в прибавке нового элемента в методе add(item)
         Assertions.assertEquals("name6", stringList.toArray()[stringList.size() - 1]);
     }
 
@@ -65,6 +67,7 @@ class StringListImplTest {
         Assertions.assertEquals("name6", stringList.add(3, "name6"));
         Assertions.assertEquals(size + 1, stringList.size()); //Убеждаемся в прибавке нового элемента в массиве
         Assertions.assertEquals("name6", stringList.toArray()[3]); //Убеждаемся, что по третьему индексу записана новая строка и произошло смещение массива вправо
+        Assertions.assertEquals("name4", stringList.toArray()[4]); //Убеждаемся, что name4 смещена вправо с индекса 3 на индекс 4
     }
 
     @Test
@@ -106,18 +109,20 @@ class StringListImplTest {
     }
 
     @Test
-    void shouldRemove_WhenLastCorrectItem_ThenTRemove() {
+    void shouldRemove_WhenLastCorrectItem_ThenRemove() {
         int size = stringList.size();
         Assertions.assertEquals("name5", stringList.remove("name5"));
         Assertions.assertEquals(size - 1, stringList.size());
+        Assertions.assertFalse(stringList.contains("name5"));  //Такого элемента нет
     }
 
     @Test
-    void shouldRemove_WhenInsideCorrectItem_ThenTRemove() {
+    void shouldRemove_WhenInsideCorrectItem_ThenRemove() {
         int size = stringList.size();
         Assertions.assertEquals("name2", stringList.remove("name2"));
         Assertions.assertEquals(size - 1, stringList.size());
         Assertions.assertEquals("name3", stringList.toArray()[1]);  //Убеждаемся, что произошло смещение массива влево, где был ранее удалённый элемент
+        Assertions.assertFalse(stringList.contains("name2"));  //Такого элемента нет
     }
 
     @Test
@@ -126,18 +131,20 @@ class StringListImplTest {
     }
 
     @Test
-    void shouldRemove_WhenLastCorrectIndex_ThenTRemove() {
+    void shouldRemove_WhenLastCorrectIndex_ThenRemove() {
         int size = stringList.size();
         Assertions.assertEquals("name5", stringList.remove(4));
         Assertions.assertEquals(size - 1, stringList.size());
+        Assertions.assertFalse(stringList.contains("name5"));  //Такого элемента нет
     }
 
     @Test
-    void shouldRemove_WhenInsideCorrectIndex_ThenTRemove() {
+    void shouldRemove_WhenInsideCorrectIndex_ThenRemove() {
         int size = stringList.size();
         Assertions.assertEquals("name2", stringList.remove(1));
         Assertions.assertEquals(size - 1, stringList.size());
         Assertions.assertEquals("name3", stringList.toArray()[1]);  //Убеждаемся, что произошло смещение массива влево, где был ранее удалённый элемент
+        Assertions.assertFalse(stringList.contains("name2"));  //Такого элемента нет
     }
 
     @Test
@@ -177,12 +184,12 @@ class StringListImplTest {
     }
 
     @Test
-    void shouldGet_WhenNotCorrectIndex_ThenInvalidIndexException1() {
+    void shouldGet_WhenNotCorrectIndex_ThenInvalidNegativeIndexException() {
         Assertions.assertThrows(InvalidIndexException.class, () -> stringList.get(-1));
     }
 
     @Test
-    void shouldGet_WhenNotCorrectIndex_ThenInvalidIndexException2() {
+    void shouldGet_WhenNotCorrectIndex_ThenInvalidLimitIndexException() {
         Assertions.assertThrows(InvalidIndexException.class, () -> stringList.get(stringList.size()));  //Выход индекса за предел значений массива size
     }
 
@@ -209,8 +216,9 @@ class StringListImplTest {
     }
 
     @Test
-    void shouldIsEmpty() {
+    void shouldNotIsEmpty() {
         assertTrue(!stringList.isEmpty());
+        assertFalse(stringList.isEmpty());
     }
 
     @Test
@@ -220,7 +228,7 @@ class StringListImplTest {
     }
 
     @Test
-    void shouldToArray() {
+    void shouldCopiToArray() {
         String[] testList = stringList.toArray();
         assertEquals("name1",testList[0]);
         assertEquals(5, testList.length);  //Длина нового массива высчитывается по size!
