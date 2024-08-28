@@ -22,7 +22,12 @@ public class Main {
         long start3 = System.currentTimeMillis();
         Integer[] integerArray2 = generateArray();
         integerList.collectionSort(integerArray2);
-        System.out.println("Время сортировки по методу collectionSort(): " + (System.currentTimeMillis() - start3) + " мс");
+        System.out.println("Время сортировки по методу collectionSort(утилитная сортировка): " + (System.currentTimeMillis() - start3) + " мс");
+
+        long start4 = System.currentTimeMillis();
+        Integer[] integerArray3 = generateArray();
+        integerList.sortFastRecursion(integerArray3);
+        System.out.println("Время сортировки по методу sortFastRecursion(быстрая сортировка с рекурсией): " + (System.currentTimeMillis() - start4) + " мс");
     }
 
     public static Integer[] generateArray() {

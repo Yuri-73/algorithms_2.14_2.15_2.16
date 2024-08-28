@@ -13,7 +13,7 @@ import static java.util.Arrays.sort;
 
 public class IntegerListImpl implements StringList {
     //Вторая реализация StringList, но с целочисленным массивом. Для этого важно сохранить сигнатуру и тип выходного параметра в каждом методе
-    private final Integer[] storage;
+    private Integer[] storage;
     private int size;
 
     public IntegerListImpl() {
@@ -26,24 +26,28 @@ public class IntegerListImpl implements StringList {
 
     @Override
     public String add(String item) {
-        validateLength();
+//        validateLength();  //Удален, т.к массив теперь в ДЗ-2.16 расширяемый
+        growIfNeeded();  //Увеличение массива в 1,5 раза при необходимости
         validateItemAdd(item);
         Integer numItem = Integer.parseInt(item);
         storage[size++] = numItem;  //По индексу 0 записываем item и после прибавляем: size=size+1
+
         return item;
     }
 
     @Override
     public String add(int index, String item) {
-        validateLength();
+        growIfNeeded();
+//        validateLength();  //Удален, т.к массив теперь в ДЗ-2.16 расширяемый
         validateItemAdd(item);
         validateIndexAdd(index);
         if (index == size) {
             Integer numItem = Integer.parseInt(item);
             storage[size++] = numItem;
+
             return item;
         }
-        System.arraycopy(storage, index, storage, index + 1, size - index);
+        System.arraycopy(storage, index, storage, index + 1, size - index); //Сдвиг массива вправо
         size++;
         Integer numItem = Integer.parseInt(item);
         storage[index] = numItem;
@@ -80,8 +84,9 @@ public class IntegerListImpl implements StringList {
     public boolean contains(String item) { //В отличие от string-реализации в integer-реализации есть сортировка, а потом через бинарный поиск
         Integer numItem = Integer.parseInt(item);
         Integer[] copyArray = Arrays.copyOf(storage, size);
-        sort(copyArray);
-        int count = Arrays.binarySearch(copyArray, numItem);
+//        sort(copyArray); //для ДЗ-2.15 утилита
+        sortFastRecursion(copyArray); //Быстрая сортировка рекурсивная согласно условия ДЗ-2.16. Код скопирован со шпаргалки 2.16
+        int count = Arrays.binarySearch(copyArray, numItem); //Утилита бинарного поиска
         if (count >= 0 && count < size) { //Проверка вхождения результата-индекса в заданный предел
             return true;
         } else {
@@ -140,8 +145,8 @@ public class IntegerListImpl implements StringList {
 
     @Override
     public String[] toArray() {
-        String[] result = new String[size];
-        for (int i = 0; i < size; i++) {
+        String[] result = new String[storage.length];
+        for (int i = 0; i < storage.length; i++) {
             result[i] = String.valueOf(storage[i]);
         }
         return result;
@@ -153,7 +158,7 @@ public class IntegerListImpl implements StringList {
         }
     }
 
-    private void validateLength() {
+    private void validateLength() {  //В ДЗ-2.16 не актуален, поэтому в тест-методы выхода за длину массива удалил
         if (size == storage.length) {
             throw new StorageIsFullException();
         }
@@ -207,10 +212,53 @@ public class IntegerListImpl implements StringList {
         arr[indexB] = tmp;
     }
 
-    public static void collectionSort(Integer[] integers) {  //Самая быстрая сортировка
+    public static void collectionSort(Integer[] integers) {  //Самая быстрая сортировка!!!
         Integer[] generated2 = Arrays.copyOf(integers, integers.length);
         List<Integer> list = new ArrayList<>(List.of(generated2));
         Collections.sort(list);
         System.out.println("list.get(8800) = " + list.get(8800));
     }
+
+    private void growIfNeeded() {  //Для расширения массива
+        if (size == storage.length) {
+            grow();
+        }
+    }
+
+    private void grow() {  //Для расширения массива в 1,5 раза
+        storage = Arrays.copyOf(storage, size + size / 2);
+        System.out.println(storage.length);
+    }
+
+
+    public static void sortFastRecursion(Integer[] arr) {  //Для ДЗ-2.16 - применение быстрой сортировки (она с рекурсией)
+        quickSort(arr, 0, arr.length - 1);
+    }
+
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    public static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+
 }

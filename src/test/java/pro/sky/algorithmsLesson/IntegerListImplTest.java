@@ -42,13 +42,17 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldAdd_WhenNotCorrectParam_ThenStorageIsFullException() {
+    void shouldAdd_WhenSizeEqualsLength_ThenGrow() {  //ДЗ-2.16 Расширение length на 50%
+        int size = integerList.size();
         integerList.add("6");
         integerList.add("7");
         integerList.add("8");
         integerList.add("9");
         integerList.add("10");
-        Assertions.assertThrows(StorageIsFullException.class, () -> integerList.add("11"));  //У нас length=10, поэтому выход за пределы массива
+        integerList.add("11"); //Здесь size становится равной length массива storoge[10]
+
+        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item)
+        Assertions.assertEquals(integerList.size() + integerList.size()/2 - 1, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
     }
 
     @Test
@@ -69,13 +73,17 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldAdd_WhenNotCorrectParams_ThenStorageIsFullException() {
-        integerList.add(5, "6");
-        integerList.add(6, "7");
-        integerList.add(7, "8");
-        integerList.add(8, "9");
-        integerList.add(9, "10");
-        Assertions.assertThrows(StorageIsFullException.class, () -> integerList.add(10, "11"));  //У нас length=10, поэтому выход за пределы массива
+    void shouldAdd_WhenWith2ParamsSizeEqualsLength_ThenGrow() {  //ДЗ-2.16 Расширение length на 50%
+        int size = integerList.size();
+        integerList.add(5,"6");
+        integerList.add(6,"7");
+        integerList.add(7,"8");
+        integerList.add(8,"9");
+        integerList.add(9,"10");
+        integerList.add(10,"11"); //Здесь size становится равной length массива storoge[10]
+
+        Assertions.assertEquals(integerList.size() + integerList.size()/2 - 1, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
+        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item)
     }
 
     @Test
@@ -195,13 +203,27 @@ class IntegerListImplTest {
 
     @Test
     void shouldEquals_WhenCorrectTestList_ThenTrue() {
-        StringList testList = new StringListImpl(11);
+        //Для ДЗ-2.16 этот тест поменял, т.к. исходный метод equals() из-за корректировки метода toArray() (тот стал работать не по size, а по length. В ДЗ-2.15 остался по size)
+        integerList.add("6");
+        integerList.add("7");
+        integerList.add("8");
+        integerList.add("9");
+        integerList.add("10");
+
+        StringList testList = new StringListImpl(10);
         testList.add("3");
         testList.add("2");
         testList.add("1");
         testList.add("5");
         testList.add("4");
-
+        testList.add("6");
+        testList.add("7");
+        testList.add("8");
+        testList.add("9");
+        testList.add("10");
+        for (int i = 0; i < 10; i++) {
+            Assertions.assertEquals(testList.toArray()[i], integerList.toArray()[i]);
+        }
         assertTrue(integerList.equals(testList));  //Сравнение идёт не по предельному количеству элементов в массиве (они не равны), а по реальному заполнению, т.е. по size
     }
 
@@ -229,13 +251,14 @@ class IntegerListImplTest {
 
     @Test
     void shouldCopiToArray() {
-        String[] testList = integerList.toArray();
+        String[] testList = integerList.toArray();  //Создание копии массива storoge[]
         assertEquals("1",testList[2]);
-        assertEquals(5, testList.length);  //Длина нового массива высчитывается по size!
+        assertEquals(5, integerList.size());  //Количество действующих элементов нового массива равно size
+        assertEquals(10, testList.length);  //Длина нового массива равна длине storoge[]
     }
 
     @Test
-    void shouldSortSelection_WhenCorrectParams_ThenSortedArrays() {
+    void shouldSortSelection_WhenWhenUnsortedArray_ThenSortedArrays() {
         Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
         Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntegerListImpl.sortSelection(testList);
@@ -245,10 +268,20 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldSortInsert_WhenCorrectParams_ThenSortedArrays() {
+    void shouldSortInsert_WhenUnsortedArray_ThenSortedArrays() {
         Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
         Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntegerListImpl.sortInsertion(testList);
+        for (int i = 0; i < 10; i++) {
+            Assertions.assertEquals(testList[i], testList2[i]);
+        }
+    }
+
+    @Test
+    void shouldSortFastRecursion_WhenUnsortedArray_ThenSortedArrays() {  //Специально для ДЗ-2.16
+        Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
+        Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        IntegerListImpl.sortFastRecursion(testList);
         for (int i = 0; i < 10; i++) {
             Assertions.assertEquals(testList[i], testList2[i]);
         }
