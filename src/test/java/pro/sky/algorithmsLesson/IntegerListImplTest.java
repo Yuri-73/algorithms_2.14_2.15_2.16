@@ -15,7 +15,8 @@ class IntegerListImplTest {
     private StringList integerList = new IntegerListImpl(10); //Будем использовать параметризованный конструктор
 
     @BeforeEach
-    void setUp() {  //В каждом тест-методе будут в самом начале
+    void setUp() {  //В каждом тест-методе будут в самом начале, а манипуляции в тестах стираются,
+        // не смотря даже на наличие @AfterEach и обнулении в нём size (можно его вообще убрать!)
         integerList.add("3");
         integerList.add("2");
         integerList.add("1");
@@ -23,7 +24,7 @@ class IntegerListImplTest {
         integerList.add("4");
     }
 
-    @AfterEach
+    @AfterEach //Не обязательно
     public void clearList() {  //В конце каждого тест-метода будет удаление всех элементов массива
         integerList.clear();
     }
@@ -48,19 +49,19 @@ class IntegerListImplTest {
         integerList.add("8");
         integerList.add("9");
         integerList.add("10");
-        Assertions.assertThrows(StorageIsFullException.class, () -> integerList.add("11"));  //У нас length=10, поэтому выход за пределы массива
+        Assertions.assertThrows(StorageIsFullException.class, () -> integerList.add("11"));  //У нас length=10, в этом методе быстрее сработает исключение из-за size++ = length
     }
 
     @Test
     void shouldAdd_WhenLastCorrectParams_ThenAdd() {
         int size = integerList.size();
-        Assertions.assertEquals("6", integerList.add(integerList.size(),"6"));  //Добавляем новый элемент в коней массива
+        Assertions.assertEquals("6", integerList.add(integerList.size(),"6"));  //Добавляем новый элемент в конец массива
         Assertions.assertEquals(size + 1, integerList.size());  //Убеждаемся в прибавке нового элемента
         Assertions.assertEquals("6", integerList.toArray()[integerList.size() - 1]); //Добавленный элемент в самом конце списка
     }
 
     @Test
-    void shouldAdd_WhenInsideCorrectParams_ThenAdd() {
+    void shouldAdd_WhenInsideCorrectParams_ThenAdd() { //Проверка внесения параметра в массив в его середину (перегруженный метод  - с 2 параметрами)
         int size = integerList.size();
         Assertions.assertEquals("6", integerList.add(3, "6"));
         Assertions.assertEquals(size + 1, integerList.size()); //Убеждаемся в прибавке нового элемента в массиве
@@ -69,7 +70,7 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldAdd_WhenNotCorrectParams_ThenStorageIsFullException() {
+    void shouldAdd_WhenNotCorrectParams_ThenStorageIsFullException() { //Проверка выхода на предел массива
         integerList.add(5, "6");
         integerList.add(6, "7");
         integerList.add(7, "8");
@@ -99,7 +100,7 @@ class IntegerListImplTest {
     @Test
     void shouldSet_WhenNotCorrectParams_ThenInvalidIndexException() {
         Assertions.assertThrows(InvalidIndexException.class, () -> integerList.set(-1, "11"));
-        Assertions.assertThrows(InvalidIndexException.class, () -> integerList.set(integerList.size(), "11")); //Выход за предел значений массива size
+        Assertions.assertThrows(InvalidIndexException.class, () -> integerList.set(integerList.size(), "11")); //Выход за предел значений массива size (обновлять нечего)
     }
 
     @Test
@@ -217,14 +218,14 @@ class IntegerListImplTest {
 
     @Test
     void shouldNotIsEmpty() {
-        assertTrue(!integerList.isEmpty());
-        assertFalse(integerList.isEmpty());
+        assertTrue(!integerList.isEmpty()); //Начальный массив имеет 5 значений
+        assertFalse(integerList.isEmpty()); //Начальный массив имеет 5 значений
     }
 
     @Test
     void shouldClear() {
         integerList.clear();
-        Assertions.assertEquals(0, integerList.size());
+        Assertions.assertEquals(0, integerList.size()); // Обнуление
     }
 
     @Test

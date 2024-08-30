@@ -17,10 +17,10 @@ public class IntegerListImpl implements StringList {
     private int size;
 
     public IntegerListImpl() {
-        storage = new Integer[10];  //Инициализация пустого массива на 10 элементов
+        storage = new Integer[10];  //Инициализация пустого массива на 10 элементов (не использован)
     }
 
-    public IntegerListImpl(int initSize) {  //Использовал только этот параметризованный конструктор
+    public IntegerListImpl(int initSize) {  //Использовал только этот параметризованный конструктор (в тест-методе)
         storage = new Integer[initSize];
     }
 
@@ -28,7 +28,7 @@ public class IntegerListImpl implements StringList {
     public String add(String item) {
         validateLength();
         validateItemAdd(item);
-        Integer numItem = Integer.parseInt(item);
+        Integer numItem = Integer.parseInt(item);  //Переформатирование входной строки в целое число (так везде в других методах)
         storage[size++] = numItem;  //По индексу 0 записываем item и после прибавляем: size=size+1
         return item;
     }
@@ -60,28 +60,28 @@ public class IntegerListImpl implements StringList {
     }
 
     @Override
-    public String remove(String item) {
+    public String remove(String item) {  //Не учёл ещё ошибку, если такого значения нет в Сете (учёл её в ветке hw-2.15 в StringListImpl)
         validateItemAdd(item);
         int index = indexOf(item);
-        return remove(index);
+        return remove(index);  //По-хорошему, нельзя перебрасывать решение другому методу (учёл и изменил эквивалентный метод в ветке hw-2.15 в StringListImpl)
     }
 
     @Override
     public String remove(int index) {
         validateIndexSetOrRemoveOrGet(index);
         Integer item = storage[index];
-        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);  //Удаление со смещением
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);  //Удаление это значение item со смещением влево
         size--;
-        return String.valueOf(item);
+        return String.valueOf(item); //Переформатирование целого числа item в строку для вывода из метода
     }
 
 
     @Override
-    public boolean contains(String item) { //В отличие от string-реализации в integer-реализации есть сортировка, а потом через бинарный поиск
-        Integer numItem = Integer.parseInt(item);
-        Integer[] copyArray = Arrays.copyOf(storage, size);
-        sort(copyArray);
-        int count = Arrays.binarySearch(copyArray, numItem);
+    public boolean contains(String item) { //В отличие от string-реализации в integer-реализации есть сортировка, чтобы обеспечить бинарный поиск этого item
+        Integer numItem = Integer.parseInt(item); //Преобразование строки в число
+        Integer[] copyArray = Arrays.copyOf(storage, size);  //ПСоздание нового массива через копирование старого и длиной массива size
+        sort(copyArray);  //Статическая утилита от класса Arrays
+        int count = Arrays.binarySearch(copyArray, numItem); //Бинарный поиск
         if (count >= 0 && count < size) { //Проверка вхождения результата-индекса в заданный предел
             return true;
         } else {
@@ -90,7 +90,7 @@ public class IntegerListImpl implements StringList {
     }
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(String item) {  //Снизу вверх
         Integer numItem = Integer.parseInt(item);
         for (int i = 0; i < size; i++) {
             if (storage[i].equals(numItem)) {
@@ -101,7 +101,7 @@ public class IntegerListImpl implements StringList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(String item) {  //Сверху вниз
         Integer numItem = Integer.parseInt(item);
         for (int i = size - 1; i >= 0; i--) {
             if (storage[i].equals(numItem)) {
@@ -142,9 +142,9 @@ public class IntegerListImpl implements StringList {
     public String[] toArray() {
         String[] result = new String[size];
         for (int i = 0; i < size; i++) {
-            result[i] = String.valueOf(storage[i]);
+            result[i] = String.valueOf(storage[i]);  //Интересное решение преобразования в целочисленном массиве целых чисел в строки от наставника Кости
         }
-        return result;
+        return result;  //Выдача строкового массива
     }
 
     private void validateItemAdd(String item) {
@@ -177,7 +177,8 @@ public class IntegerListImpl implements StringList {
         }
     }
 
-    public static void sortInsertion(Integer[] arr) {
+    //Ряд сортировок для их проверки на скорость выполнения в классе Main:
+    public static void sortInsertion(Integer[] arr) {  //Сортировка вставкой (см. шпаргалку 2.16)
         for (int i = 1; i < arr.length; i++) {
             int temp = arr[i];
             int j = i;
@@ -189,7 +190,7 @@ public class IntegerListImpl implements StringList {
         }
     }
 
-    public static void sortSelection(Integer[] arr) {
+    public static void sortSelection(Integer[] arr) {  //Сортировка выбором (см. шпаргалку 2.16)
         for (int i = 0; i < arr.length - 1; i++) {
             int minElementIndex = i;
             for (int j = i + 1; j < arr.length; j++) {
@@ -207,10 +208,10 @@ public class IntegerListImpl implements StringList {
         arr[indexB] = tmp;
     }
 
-    public static void collectionSort(Integer[] integers) {  //Самая быстрая сортировка
+    public static void collectionSort(Integer[] integers) {  //Самая быстрая сортировка из реализации Collections
         Integer[] generated2 = Arrays.copyOf(integers, integers.length);
         List<Integer> list = new ArrayList<>(List.of(generated2));
         Collections.sort(list);
-        System.out.println("list.get(8800) = " + list.get(8800));
+        System.out.println("list.get(6800) = " + list.get(6800));  //Для ручного теста в майне
     }
 }

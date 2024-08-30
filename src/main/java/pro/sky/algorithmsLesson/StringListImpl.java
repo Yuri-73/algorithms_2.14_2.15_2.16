@@ -6,9 +6,10 @@ import pro.sky.algorithmsLesson.exceptions.StorageIsFullException;
 
 import java.util.Arrays;
 
+//Подробные комментарии для каждого метода этого класса даны и в задании 2.16 (в 2.14 почти не даны)
 public class StringListImpl implements StringList {
     private final String[] storage;
-    private int size;
+    private int size;  //Не путать с длиной массива. Это количество заполненных значений массива.
 
     public StringListImpl() {
         storage = new String[10];  //Инициализация пустого массива на 10 элементов
@@ -20,8 +21,8 @@ public class StringListImpl implements StringList {
 
     @Override
     public String add(String item) {
-        validateLength();
-        validateItemAdd(item);
+        validateLength(); //if (size == storage.length) -> throw new StorageIsFullException();
+        validateItemAdd(item); // if (item == null) -> throw new NullItemException();
         storage[size++] = item;  //По индексу 0 записываем item и после прибавляем: size=size+1
         return item;
     }
@@ -30,20 +31,20 @@ public class StringListImpl implements StringList {
     public String add(int index, String item) {
         validateLength();
         validateItemAdd(item);
-        validateIndexAdd(index);
-        if (index == size) {
+        validateIndexAdd(index); //if (index < 0 || index > size) -> throw new InvalidIndexException();
+        if (index == size) { //Внесение в правый край массива (смещение не требуется)
             storage[size++] = item;
             return item;
         }
-        System.arraycopy(storage, index, storage, index + 1, size - index);
+        System.arraycopy(storage, index, storage, index + 1, size - index);  //Смещение вправо для внесения значения в середину
         size++;
         storage[index] = item;
         return item;
     }
 
     @Override
-    public String set(int index, String item) {
-        validateIndexSetOrRemoveOrGet(index);
+    public String set(int index, String item) { // Обновление с затиранием предыдущего значения, поэтому index должен быть меньше текущего size++
+        validateIndexSetOrRemoveOrGet(index); // if (index < 0 || index >= size) -> throw new InvalidIndexException()
         validateItemAdd(item);
         storage[index] = item;
         return item;
@@ -60,14 +61,14 @@ public class StringListImpl implements StringList {
     public String remove(int index) {
         validateIndexSetOrRemoveOrGet(index);
         String item = storage[index];
-        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);  //Удаление со смещением
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);  //Удаление со смещением влево
         size--;
         return item;
     }
 
     @Override
     public boolean contains(String item) {
-        return indexOf(item) != -1;
+        return indexOf(item) != -1; //Переход в следующий метод
     }
 
     @Override
@@ -134,7 +135,8 @@ public class StringListImpl implements StringList {
         }
     }
 
-    private void validateIndexAdd(int index) {
+    private void validateIndexAdd(int index) { //Надо учитывать в понимании логики, что это size++.
+        // Исключение возникнет, если выбрать параметром индекс на один больше, чем size++.
         if (index < 0 || index > size) {
             throw new InvalidIndexException();
         }
