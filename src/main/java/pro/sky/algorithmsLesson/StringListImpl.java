@@ -55,7 +55,9 @@ public class StringListImpl implements StringList {
         validateItemString(item); //Если item = null
         int index = indexOf(item);
         validateIndexSetOrRemoveOrGet(index); //Если индекс равен -1 (такого значения item нет в Сете)
-        return remove(index);
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);  //Удаление со смещением
+        size--;
+        return item;
     }
 
     @Override

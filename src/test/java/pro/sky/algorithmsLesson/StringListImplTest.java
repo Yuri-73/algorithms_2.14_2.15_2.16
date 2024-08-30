@@ -64,7 +64,8 @@ class StringListImplTest {
         int size = stringList.size();
         Assertions.assertEquals("name6", stringList.add(3, "name6"));
         Assertions.assertEquals(size + 1, stringList.size()); //Убеждаемся в прибавке нового элемента в массиве
-        Assertions.assertEquals("name6", stringList.toArray()[3]); //Убеждаемся, что по третьему индексу записана новая строка и произошло смещение массива вправо
+        Assertions.assertEquals("name6", stringList.toArray()[3]); //Убеждаемся, что по третьему индексу записана новая строка
+        Assertions.assertEquals("name4", stringList.toArray()[4]); //Убеждаемся, что произошло смещение массива вправо
     }
 
     @Test
@@ -110,6 +111,7 @@ class StringListImplTest {
         int size = stringList.size();
         Assertions.assertEquals("name5", stringList.remove("name5"));
         Assertions.assertEquals(size - 1, stringList.size());
+        Assertions.assertFalse(stringList.contains("name5"));
     }
 
     @Test
@@ -118,6 +120,7 @@ class StringListImplTest {
         Assertions.assertEquals("name2", stringList.remove("name2"));
         Assertions.assertEquals(size - 1, stringList.size());
         Assertions.assertEquals("name3", stringList.toArray()[1]);  //Убеждаемся, что произошло смещение массива влево, где был ранее удалённый элемент
+        Assertions.assertFalse(stringList.contains("name2"));
     }
 
     @Test
@@ -126,10 +129,17 @@ class StringListImplTest {
     }
 
     @Test
+    void shouldRemove_WhenNotCorrectItem_InvalidIndexException() {
+        Assertions.assertThrows(InvalidIndexException.class, () -> stringList.remove("name15"));
+    }
+
+
+    @Test
     void shouldRemove_WhenLastCorrectIndex_ThenTRemove() {
         int size = stringList.size();
         Assertions.assertEquals("name5", stringList.remove(4));
         Assertions.assertEquals(size - 1, stringList.size());
+        Assertions.assertFalse(stringList.contains("name5"));
     }
 
     @Test
@@ -138,17 +148,20 @@ class StringListImplTest {
         Assertions.assertEquals("name2", stringList.remove(1));
         Assertions.assertEquals(size - 1, stringList.size());
         Assertions.assertEquals("name3", stringList.toArray()[1]);  //Убеждаемся, что произошло смещение массива влево, где был ранее удалённый элемент
+        Assertions.assertFalse(stringList.contains("name2"));
     }
 
     @Test
     void shouldRemove_WhenNotNotCorrectIndex_ThenInvalidIndexException() {
         Assertions.assertThrows(InvalidIndexException.class, () -> stringList.remove(stringList.size()));  //Убеждаемся, что штатно выводится ошибка при выходе индекса на size
+        Assertions.assertThrows(InvalidIndexException.class, () -> stringList.remove(-1));  //Убеждаемся, что штатно выводится ошибка при выходе индекса на size
     }
 
     @Test
     void shouldСontains_WhenCorrectItem_ThenTrue() {
         Assertions.assertEquals(true, stringList.contains("name2"));
         Assertions.assertFalse(stringList.contains("name8"));  //Такого элемента нет
+        Assertions.assertTrue(stringList.contains("name3"));  //Такой элемент есть
     }
 
     @Test
@@ -158,7 +171,7 @@ class StringListImplTest {
 
     @Test
     void shouldIndexOf_WhenNotCorrectItem_ThenNegativeNumber() {
-        Assertions.assertEquals(-1, stringList.indexOf("name6"));
+        Assertions.assertEquals(-1, stringList.indexOf("name12"));
     }
 
     @Test
@@ -168,7 +181,7 @@ class StringListImplTest {
 
     @Test
     void shouldLastIndexOf_WhenNotCorrectItem_NegativeNumber() {
-        Assertions.assertEquals(-1, stringList.lastIndexOf("name6"));
+        Assertions.assertEquals(-1, stringList.lastIndexOf("name12"));
     }
 
     @Test
@@ -196,21 +209,25 @@ class StringListImplTest {
         testList.add("name5");
 
         assertTrue(stringList.equals(testList));  //Сравнение идёт не по предельному количеству элементов в массиве (они не равны), а по реальному заполнению, т.е. по size
+
+        testList.add("name6");
+        assertFalse(stringList.equals(testList));
     }
 
     @Test
     void shouldEquals_WhenNotCorrectTestList_ThenFalse() {
-        Assertions.assertThrows(NullItemException.class, () -> stringList.equals(null)); //null в параметр-массив подавать нельзя
+        Assertions.assertThrows(NullItemException.class, () -> stringList.equals(null)); //подан null в параметр-массив
     }
 
     @Test
-    void shouldSizee() {
+    void shouldSize() {
         Assertions.assertEquals(5, stringList.size()); //Изначально через @BiforeEach задано 5 значений массива
     }
 
     @Test
     void shouldIsEmpty() {
         assertTrue(!stringList.isEmpty());
+        assertFalse(stringList.isEmpty());
     }
 
     @Test
@@ -223,6 +240,8 @@ class StringListImplTest {
     void shouldToArray() {
         String[] testList = stringList.toArray();
         assertEquals("name1",testList[0]);
-        assertEquals(5, testList.length);  //Длина нового массива высчитывается по size!
+        for (int i = 0; i < stringList.size(); i++) {
+            assertEquals(stringList.toArray()[i],testList[i]);
+        }
     }
 }
