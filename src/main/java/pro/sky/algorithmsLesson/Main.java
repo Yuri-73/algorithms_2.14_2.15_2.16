@@ -21,13 +21,13 @@ public class Main {
 
         long start3 = System.currentTimeMillis();
         Integer[] integerArray2 = generateArray();
-        integerList.collectionSort(integerArray2);
+        integerList.collectionSort(integerArray2);  //Очень быстрая сортировка!!!
         System.out.println("Время сортировки по методу collectionSort(): " + (System.currentTimeMillis() - start3) + " мс");
     }
 
-    public static Integer[] generateArray() {
-        Integer[] integerArray = new Integer[10000];
-        for (int i = 0; i < 10000; i++) {
+    public static Integer[] generateArray() {  //Генератор случайных чисел от 1 до 10 в заданном массиве
+        Integer[] integerArray = new Integer[100000];
+        for (int i = 0; i < 100000; i++) {
             Random random = new Random();
             integerArray[i] = random.nextInt(1, 10);
         }
