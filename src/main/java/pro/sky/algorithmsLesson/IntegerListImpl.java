@@ -14,7 +14,8 @@ import static java.util.Arrays.sort;
 //ДЗ-2.16 сделано на базе задания 2.15. В том задании, а особенно ниже - в 2.14, были некоторые непринципиальные корректировки, но их сюда не переносил
 public class IntegerListImpl implements StringList {
     //Вторая реализация StringList, но с целочисленным массивом. Для этого важно сохранить сигнатуру и тип выходного параметра в каждом методе
-    private Integer[] storage;
+
+    private Integer[] storage;  //Удаляем final, чтобы расширять массив (специально для ДЗ-2.16)
     private int size;
 
     public IntegerListImpl() {
@@ -227,7 +228,10 @@ public class IntegerListImpl implements StringList {
     }
 
     private void grow() {  //Для расширения массива в 1,5 раза
-        storage = Arrays.copyOf(storage, size + size / 2);
+        storage = Arrays.copyOf(storage, size + size / 2);  //Другой вариант из вебинара по алгоритмам у Санёчка 1:38:4сек.:
+        // Integer[] newArray = new Integer [(int) table.length * multiplicationFactor)];
+        // System arrayCopy (table, 0, newArray, table.length);
+        // table = newArray;
         System.out.println(storage.length);
     }
 

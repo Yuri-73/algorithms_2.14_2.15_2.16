@@ -8,6 +8,16 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Main {
     public static void main(String[] args) {
+        StringListImpl stringList = new StringListImpl(10);
+
+        System.out.println(stringList.add("один"));
+        System.out.println(stringList.add("два"));
+        System.out.println(stringList.add(1, "один+"));
+        System.out.println("stringList.getStorage(): " + stringList.toString());
+
+        System.out.println("stringList.remove(\"один+\"): " +stringList.remove("один+"));
+        System.out.println("stringList.getStorage(): " + stringList.toString());
+
         IntegerListImpl integerList = new IntegerListImpl();
 
         long start = System.currentTimeMillis();
