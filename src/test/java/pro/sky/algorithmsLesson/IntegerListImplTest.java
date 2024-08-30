@@ -258,7 +258,7 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldSortSelection_WhenWhenUnsortedArray_ThenSortedArrays() {
+    void shouldSortSelection_WhenWhenUnsortedArray_ThenSortedArrays() {  //Для ДЗ-2.15
         Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
         Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntegerListImpl.sortSelection(testList);
@@ -268,7 +268,7 @@ class IntegerListImplTest {
     }
 
     @Test
-    void shouldSortInsert_WhenUnsortedArray_ThenSortedArrays() {
+    void shouldSortInsert_WhenUnsortedArray_ThenSortedArrays() {  //Для ДЗ-2.15
         Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
         Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntegerListImpl.sortInsertion(testList);
@@ -276,9 +276,9 @@ class IntegerListImplTest {
             Assertions.assertEquals(testList[i], testList2[i]);
         }
     }
-
+    //Блок специально вставлен для ДЗ-2.16:
     @Test
-    void shouldSortFastRecursion_WhenUnsortedArray_ThenSortedArrays() {  //Специально для ДЗ-2.16
+    void shouldSortFastRecursion_WhenUnsortedArray_ThenSortedArrays() {
         Integer[] testList = {3, 2, 1, 4, 5, 7, 6, 8, 9, 10};
         Integer[] testList2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntegerListImpl.sortFastRecursion(testList);

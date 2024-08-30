@@ -24,6 +24,7 @@ public class Main {
         integerList.collectionSort(integerArray2);
         System.out.println("Время сортировки по методу collectionSort(утилитная сортировка): " + (System.currentTimeMillis() - start3) + " мс");
 
+        //Блок специально вставлен для ДЗ-2.16:
         long start4 = System.currentTimeMillis();
         Integer[] integerArray3 = generateArray();
         integerList.sortFastRecursion(integerArray3);
