@@ -43,7 +43,7 @@ class IntegerListImplTest {
 
     @Test
     void shouldAdd_WhenSizeEqualsLength_ThenGrow() {  //ДЗ-2.16 Расширение length на 50%
-        int size = integerList.size();
+        int length = integerList.toArray().length;
         integerList.add("6");
         integerList.add("7");
         integerList.add("8");
@@ -51,8 +51,8 @@ class IntegerListImplTest {
         integerList.add("10");
         integerList.add("11"); //Здесь size становится равной length массива storoge[10]
 
-        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item)
-        Assertions.assertEquals(integerList.size() + integerList.size()/2 - 1, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
+        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item). Исключения нет
+        Assertions.assertEquals(length * 1.5, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
     }
 
     @Test
@@ -74,7 +74,7 @@ class IntegerListImplTest {
 
     @Test
     void shouldAdd_WhenWith2ParamsSizeEqualsLength_ThenGrow() {  //ДЗ-2.16 Расширение length на 50%
-        int size = integerList.size();
+        int length = integerList.toArray().length;
         integerList.add(5,"6");
         integerList.add(6,"7");
         integerList.add(7,"8");
@@ -82,8 +82,8 @@ class IntegerListImplTest {
         integerList.add(9,"10");
         integerList.add(10,"11"); //Здесь size становится равной length массива storoge[10]
 
-        Assertions.assertEquals(integerList.size() + integerList.size()/2 - 1, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
-        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item)
+        Assertions.assertEquals(length * 1.5, integerList.toArray().length);  //Убеждаемся в прибавке нового элемента в методе add(item)
+        Assertions.assertEquals("11", integerList.toArray()[integerList.size() - 1]);  //Убеждаемся в прибавке нового элемента в методе add(item). Исключения нет.
     }
 
     @Test
@@ -100,7 +100,7 @@ class IntegerListImplTest {
 
     @Test
     void shouldSet_WhenCorrectParams_ThenTSet() {
-        Assertions.assertEquals("12", integerList.set(2, "12"));  //Произойдёт затирование по указанному индексу
+        Assertions.assertEquals("12", integerList.set(2, "12"));  //Произойдёт затирание по указанному индексу
         Assertions.assertEquals("12", integerList.toArray()[2]);
     }
 
@@ -221,10 +221,12 @@ class IntegerListImplTest {
         testList.add("8");
         testList.add("9");
         testList.add("10");
+
+        assertTrue(integerList.equals(testList));
+
         for (int i = 0; i < 10; i++) {
             Assertions.assertEquals(testList.toArray()[i], integerList.toArray()[i]);
         }
-        assertTrue(integerList.equals(testList));  //Сравнение идёт не по предельному количеству элементов в массиве (они не равны), а по реальному заполнению, т.е. по size
     }
 
     @Test
